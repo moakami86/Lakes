@@ -6,23 +6,23 @@
 function initGame() {
     console.log("🚀 Initializing Dungeons & Exiles...");
 
-    // Initialize music
+    // Initialize music (only once)
     if (typeof MusicController !== "undefined" && MusicController.init) {
         MusicController.init();
     }
 
-    // Initialize character and other systems
+    // Character setup
     if (typeof character !== "undefined") {
         character.updateAbilityModifiers();
-        updateCharacterDetails(); // Make sure this function exists
+        if (typeof updateCharacterDetails === "function") {
+            updateCharacterDetails();
+        }
     }
 
-    // Initialize panels and UI
-    if (typeof initializePanels !== "undefined") {
+    // UI Panels
+    if (typeof initializePanels === "function") {
         initializePanels();
     }
-
-    // Add more initialization calls here as we go
 
     console.log("✅ Game initialization complete!");
 }
