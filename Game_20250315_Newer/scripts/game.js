@@ -557,9 +557,9 @@ function updateCharacterDetails() {
         character.damageRoll = character.equippedWeapon.damage_roll;
     }
 
-    console.log("Updating character details:");
-    console.log("Name:", character.name);
-    console.log("Class:", character.class);
+	// console.log("Updating character details:");
+    // console.log("Name:", character.name);
+    // console.log("Class:", character.class);
 
     document.querySelectorAll(".character-name").forEach(el => {
         el.innerText = character.name;
