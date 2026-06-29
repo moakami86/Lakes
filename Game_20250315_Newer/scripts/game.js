@@ -314,14 +314,14 @@ function chooseAction(itemName, itemType) {
 // Function to drop an item from the inventory
 function dropItem(itemName) {
     // Find the item in the inventory
-    const itemIndex = character.inventory.findIndex(item => item.name === itemName);
+    const itemIndex = Game.character.inventory.findIndex(item => item.name === itemName);
     
     // Check if the item exists
     if (itemIndex !== -1) {
         const droppedItem = character.inventory.splice(itemIndex, 1)[0]; // Remove the item from the inventory
 
         // Check if the dropped item was equipped and reset to defaults
-        if (droppedItem.name === character.equippedWeapon?.name) {
+        if (droppedItem.name === Game.character.equippedWeapon?.name) {
             character.equippedWeapon = items.find(item => item.name === "Unarmed") || null; // Reset to default "Unarmed"
             document.getElementById('current-weapon').textContent = character.equippedWeapon ? `Currently Equipped: ${character.equippedWeapon.displayName}` : 'Currently Equipped: None'; // Update UI
         }
