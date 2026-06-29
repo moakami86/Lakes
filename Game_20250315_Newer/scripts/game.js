@@ -268,7 +268,7 @@ function openItemWindow() {
     descriptionBox.innerText = "Hover over an item to see its description."; // Default message
 
     // Get detailed inventory items
-    const inventoryDetails = character.getInventoryDetails();
+    const inventoryDetails = Game.character.getInventoryDetails();
 
  // Loop through the inventory details and display each item's details
 inventoryDetails.forEach(inventoryItem => {
