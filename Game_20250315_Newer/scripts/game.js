@@ -564,6 +564,7 @@ function calculateTotalAC() {
 
 // Function to update character details on the screen
 function updateCharacterDetails() {
+	if (!Game.character) return;
 
     Game.character.checkDeadStatus();
 	
