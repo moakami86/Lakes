@@ -178,7 +178,7 @@ function equipItemFromDropdown(slot, dropdownId) {
 
     // Recalculate AC after equipping item
     calculateTotalAC();
-    updateCharacterDetails(); // Refresh character stats in the UI
+	if (Game.character) updateCharacterDetails();// Refresh character stats in the UI
 }
 
 // Add event listeners to close when clicked outside window
