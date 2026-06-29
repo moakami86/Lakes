@@ -364,24 +364,24 @@ function applyCombinedStatusEffects(effectsList) {
 
     // Apply combined effects
     for (const key in combinedEffects) {
-        if (character.abilities[key]) {
-            character.abilities[key].score += combinedEffects[key];
-            character.abilities[key].modifier = Math.floor((character.abilities[key].score - 10) / 2);
+        if (Game.character.abilities[key]) {
+            Game.character.abilities[key].score += combinedEffects[key];
+            Game.character.abilities[key].modifier = Math.floor((Game.character.abilities[key].score - 10) / 2);
         }
     }
 
     // Store the applied effects for rollback
-    character.activeEffects = combinedEffects;
+    Game.character.activeEffects = combinedEffects;
     updateStatusPanel();
 }
 
 
 // Reset the character's modifiers to their base values (healthy state)
 function resetCharacterModifiers() {
-    for (const ability in character.abilities) {
-        if (character.abilities.hasOwnProperty(ability)) {
+    for (const ability in Game.character.abilities) {
+        if (Game.character.abilities.hasOwnProperty(ability)) {
             // Calculate base score and modifier again to reset everything correctly
-            character.abilities[ability].modifier = Math.floor((character.abilities[ability].score - 10) / 2);
+            Game.character.abilities[ability].modifier = Math.floor((Game.character.abilities[ability].score - 10) / 2);
         }
     }
 }
@@ -390,12 +390,12 @@ function resetCharacterModifiers() {
 // Function to roll back the status effect changes (if needed)
 function rollbackStatusEffect(effects) {
     for (const key in effects) {
-        if (effects.hasOwnProperty(key) && character.abilities[key]) {
+        if (effects.hasOwnProperty(key) && Game.character.abilities[key]) {
             // Roll back the score change by subtracting the effect value
-            character.abilities[key].score -= effects[key];
+            Game.character.abilities[key].score -= effects[key];
 
             // Recalculate modifier after rolling back the score
-            character.abilities[key].modifier = Math.floor((character.abilities[key].score - 10) / 2);
+            Game.character.abilities[key].modifier = Math.floor((Game.character.abilities[key].score - 10) / 2);
         }
     }
 }
@@ -406,7 +406,7 @@ function rollbackStatusEffect(effects) {
 
 
 function updateStatusPanel() {
-    const currentEffects = character.activeEffects;
+    const currentEffects = Game.character.activeEffects;
     const statusContainer = document.getElementById("statusPanel");
     const effectsContainer = document.getElementById("activeEffectsContainer");
     const statusDescription = document.getElementById("status-description");
@@ -422,7 +422,7 @@ function updateStatusPanel() {
 
     if (currentEffects && Object.keys(currentEffects).length > 0) {
         // Get the status directly based on the alcohol percentage
-        const currentStatus = getAlcoholStatus(character.alcoholPercentage);
+        const currentStatus = getAlcoholStatus(Game.character.alcoholPercentage);
 
         if (currentStatus) {
             const statusName = document.getElementById("status-name");
