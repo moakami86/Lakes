@@ -325,11 +325,11 @@ function dropItem(itemName) {
             character.equippedWeapon = items.find(item => item.name === "Unarmed") || null; // Reset to default "Unarmed"
             document.getElementById('current-weapon').textContent = character.equippedWeapon ? `Currently Equipped: ${character.equippedWeapon.displayName}` : 'Currently Equipped: None'; // Update UI
         }
-        if (droppedItem.name === character.equippedShield?.name) {
+        if (droppedItem.name === Game.character.equippedShield?.name) {
             character.equippedShield = items.find(item => item.name === "Shield-None") || null; // Reset to default "Shield-None"
             document.getElementById('current-shield').textContent = character.equippedShield ? `Currently Equipped: ${character.equippedShield.displayName}` : 'Currently Equipped: None'; // Update UI
         }
-        if (droppedItem.name === character.equippedBody?.name) {
+        if (droppedItem.name === Game.character.equippedBody?.name) {
             character.equippedBody = items.find(item => item.name === "Body-None") || null; // Reset to default "Body-None"
             document.getElementById('current-body').textContent = character.equippedBody ? `Currently Equipped: ${character.equippedBody.displayName}` : 'Currently Equipped: None'; // Update UI
         }
