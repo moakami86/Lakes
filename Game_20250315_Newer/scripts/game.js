@@ -318,20 +318,20 @@ function dropItem(itemName) {
     
     // Check if the item exists
     if (itemIndex !== -1) {
-        const droppedItem = character.inventory.splice(itemIndex, 1)[0]; // Remove the item from the inventory
+        const droppedItem = Game.character.inventory.splice(itemIndex, 1)[0]; // Remove the item from the inventory
 
         // Check if the dropped item was equipped and reset to defaults
         if (droppedItem.name === Game.character.equippedWeapon?.name) {
-            character.equippedWeapon = items.find(item => item.name === "Unarmed") || null; // Reset to default "Unarmed"
-            document.getElementById('current-weapon').textContent = character.equippedWeapon ? `Currently Equipped: ${character.equippedWeapon.displayName}` : 'Currently Equipped: None'; // Update UI
+            Game.character.equippedWeapon = items.find(item => item.name === "Unarmed") || null; // Reset to default "Unarmed"
+            document.getElementById('current-weapon').textContent = Game.character.equippedWeapon ? `Currently Equipped: ${Game.character.equippedWeapon.displayName}` : 'Currently Equipped: None'; // Update UI
         }
         if (droppedItem.name === Game.character.equippedShield?.name) {
-            character.equippedShield = items.find(item => item.name === "Shield-None") || null; // Reset to default "Shield-None"
-            document.getElementById('current-shield').textContent = character.equippedShield ? `Currently Equipped: ${character.equippedShield.displayName}` : 'Currently Equipped: None'; // Update UI
+            Game.character.equippedShield = items.find(item => item.name === "Shield-None") || null; // Reset to default "Shield-None"
+            document.getElementById('current-shield').textContent = Game.character.equippedShield ? `Currently Equipped: ${Game.character.equippedShield.displayName}` : 'Currently Equipped: None'; // Update UI
         }
         if (droppedItem.name === Game.character.equippedBody?.name) {
-            character.equippedBody = items.find(item => item.name === "Body-None") || null; // Reset to default "Body-None"
-            document.getElementById('current-body').textContent = character.equippedBody ? `Currently Equipped: ${character.equippedBody.displayName}` : 'Currently Equipped: None'; // Update UI
+            Game.character.equippedBody = items.find(item => item.name === "Body-None") || null; // Reset to default "Body-None"
+            document.getElementById('current-body').textContent = Game.character.equippedBody ? `Currently Equipped: ${Game.character.equippedBody.displayName}` : 'Currently Equipped: None'; // Update UI
         }
 
         // Display feedback to the user
