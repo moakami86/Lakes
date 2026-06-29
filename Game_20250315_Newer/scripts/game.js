@@ -113,7 +113,7 @@ function populateDropdown(type, dropdownId) {
     dropdown.innerHTML = '';
 
     // Populate dropdown with items of the specified type
-    const typeItems = character.inventory.filter(item => {
+    const typeItems = Game.character.inventory.filter(item => {
         const foundItem = items.find(i => i.name === item.name);
         return foundItem && foundItem.type === type;
     });
@@ -167,7 +167,7 @@ function equipItemFromDropdown(slot, dropdownId) {
         Game.character.equippedWeapon = itemToEquip;
         Game.character.damageRoll = itemToEquip.damage_roll;
         document.getElementById('current-weapon').textContent = `Currently Equipped: ${itemToEquip.displayName}`;
-        document.getElementById('character-damage-roll').textContent = character.damageRoll;
+        document.getElementById('character-damage-roll').textContent = Game.character.damageRoll;
     } else if (slot === 'Shield') {
         Game.character.equippedShield = itemToEquip;
         document.getElementById('current-shield').textContent = `Currently Equipped: ${itemToEquip.displayName}`;
@@ -532,11 +532,11 @@ function updateImage(newImagePath) {
 // Function to calculate total AC based on equipped items
 function calculateTotalAC() {
     let baseAC = 10; // Base AC without any modifiers
-    let dexModifier = character.abilities.dexterity.modifier;
+    let dexModifier = Game.character.abilities.dexterity.modifier;
 
     // Check if body armor is equipped and apply its AC and dexterity cap
-    if (character.equippedBody) {
-        const bodyArmor = character.equippedBody;
+    if (Game.character.equippedBody) {
+        const bodyArmor = Game.character.equippedBody;
         baseAC += bodyArmor.ac;
         
         // Apply dexterity cap if one exists
@@ -546,15 +546,15 @@ function calculateTotalAC() {
     }
 
     // Check if shield is equipped and add its AC
-    if (character.equippedShield) {
-        baseAC += character.equippedShield.ac;
+    if (Game.character.equippedShield) {
+        baseAC += Game.character.equippedShield.ac;
     }
 
     // Add the final, capped Dexterity modifier to the AC
     baseAC += dexModifier;
 
     // Update character's AC
-    character.ac = baseAC;
+    Game.character.ac = baseAC;
 		
 }
 
@@ -565,94 +565,94 @@ function calculateTotalAC() {
 // Function to update character details on the screen
 function updateCharacterDetails() {
 
-    character.checkDeadStatus();
+    Game.character.checkDeadStatus();
 	
-    const currentAlcoholStatus  = getAlcoholStatus(character.alcoholPercentage);
-    const currentArousalStatus = getArousalStatus(character.arousalPercentage);
-//    const currentHungerStatus = getHungerStatus(character.hungerLevel);
-//    const currentThirstStatus = getThirstStatus(character.thirstLevel);
-//    const currentPoisonStatus = getPoisonStatus(character.poisonLevel);
+    const currentAlcoholStatus  = getAlcoholStatus(Game.character.alcoholPercentage);
+    const currentArousalStatus = getArousalStatus(Game.character.arousalPercentage);
+//    const currentHungerStatus = getHungerStatus(Game.character.hungerLevel);
+//    const currentThirstStatus = getThirstStatus(Game.character.thirstLevel);
+//    const currentPoisonStatus = getPoisonStatus(Game.character.poisonLevel);
 	
 
     updateStatusPanel();
 	
-	character.atk = character.abilities.strength.modifier; // Set ATK based on Strength modifier
-    character.hit = character.abilities.dexterity.modifier; // Set HIT based on Dexterity modifier
+	Game.character.atk = Game.character.abilities.strength.modifier; // Set ATK based on Strength modifier
+    Game.character.hit = Game.character.abilities.dexterity.modifier; // Set HIT based on Dexterity modifier
     
 	// Ensure character.ac is updated
     calculateTotalAC(); 
 	
 	// Update damageRoll based on equippedWeapon
-    if (character.equippedWeapon) {
-        character.damageRoll = character.equippedWeapon.damage_roll;
+    if (Game.character.equippedWeapon) {
+        Game.character.damageRoll = Game.character.equippedWeapon.damage_roll;
     }
 
 	// console.log("Updating character details:");
-    // console.log("Name:", character.name);
-    // console.log("Class:", character.class);
+    // console.log("Name:", Game.character.name);
+    // console.log("Class:", Game.character.class);
 
     document.querySelectorAll(".character-name").forEach(el => {
-        el.innerText = character.name;
+        el.innerText = Game.character.name;
     });
     document.querySelectorAll(".character-class").forEach(el => {
-        el.innerText = character.class;
+        el.innerText = Game.character.class;
     });
     document.querySelectorAll(".character-race").forEach(el => {
-        el.innerText = character.race;
+        el.innerText = Game.character.race;
     });
     document.querySelectorAll(".character-level").forEach(el => {
-        el.innerText = character.level;
+        el.innerText = Game.character.level;
     });
 
     // Update combat stats
-    document.getElementById("character-atk").innerText = character.atk;  // ATK
-    document.getElementById("character-hit").innerText = character.hit;  // HIT
-    document.getElementById("character-cri").innerText = character.cri;  // CRI
-    document.getElementById("character-apr").innerText = character.apr;  // APR
-    document.getElementById("character-dr").innerText = character.dr;    // DR
-    document.getElementById("character-ac").innerText = character.ac;    // AC
-	document.getElementById('character-damage-roll').textContent = character.damageRoll; // Ensure damage roll is updated
+    document.getElementById("character-atk").innerText = Game.character.atk;  // ATK
+    document.getElementById("character-hit").innerText = Game.character.hit;  // HIT
+    document.getElementById("character-cri").innerText = Game.character.cri;  // CRI
+    document.getElementById("character-apr").innerText = Game.character.apr;  // APR
+    document.getElementById("character-dr").innerText = Game.character.dr;    // DR
+    document.getElementById("character-ac").innerText = Game.character.ac;    // AC
+	document.getElementById('character-damage-roll').textContent = Game.character.damageRoll; // Ensure damage roll is updated
 
 
     // Update level and experience display
-    document.getElementById("exp").innerText = `${character.exp} / ${expRequirements[character.level]}`;
-    document.getElementById("character-hp").innerText = `HP: ${character.currentHp} / ${character.maxHp}`;
-    document.getElementById("character-mp").innerText = `MP: ${character.currentMp} / ${character.maxMp}`;
+    document.getElementById("exp").innerText = `${Game.character.exp} / ${expRequirements[Game.character.level]}`;
+    document.getElementById("character-hp").innerText = `HP: ${Game.character.currentHp} / ${Game.character.maxHp}`;
+    document.getElementById("character-mp").innerText = `MP: ${Game.character.currentMp} / ${Game.character.maxMp}`;
     
 
     // Update ability scores and modifiers in the UI
-    for (let ability in character.abilities) {
-        document.getElementById(`stat-${ability}`).innerText = character.abilities[ability].score;
-        document.getElementById(`stat-${ability}-mod`).innerText = character.abilities[ability].modifier;
+    for (let ability in Game.character.abilities) {
+        document.getElementById(`stat-${ability}`).innerText = Game.character.abilities[ability].score;
+        document.getElementById(`stat-${ability}-mod`).innerText = Game.character.abilities[ability].modifier;
     }
 	
 	
-	document.getElementById("character-corruption-perc").innerText = `${character.corruptionPercentage}%`;
-    document.getElementById("character-innocence-perc").innerText = `${character.innocencePercentage}%`;
-    document.getElementById("character-agony-perc").innerText = `${character.agonyPercentage}%`;
-    document.getElementById("character-alcohol-perc").innerText = `${character.alcoholPercentage}%`;
+	document.getElementById("character-corruption-perc").innerText = `${Game.character.corruptionPercentage}%`;
+    document.getElementById("character-innocence-perc").innerText = `${Game.character.innocencePercentage}%`;
+    document.getElementById("character-agony-perc").innerText = `${Game.character.agonyPercentage}%`;
+    document.getElementById("character-alcohol-perc").innerText = `${Game.character.alcoholPercentage}%`;
 	
-    document.getElementById("character-dead-status").innerText = character.deadStatus ? "Yes" : "No";
-    document.getElementById("character-blind-status").innerText = character.blindStatus ? "Yes" : "No";
-    document.getElementById("character-blind-duration").innerText = `${character.blindDuration} turns`;
-    document.getElementById("character-paralyze-status").innerText = character.paralyzeStatus ? "Yes" : "No";
-    document.getElementById("character-paralyze-duration").innerText = `${character.paralyzeDuration} turns`;
-    document.getElementById("character-stun-status").innerText = character.stunStatus ? "Yes" : "No";
-    document.getElementById("character-stun-duration").innerText = `${character.stunDuration} turns`;
-    document.getElementById("character-shock-status").innerText = character.shockStatus ? "Yes" : "No";
-    document.getElementById("character-shock-duration").innerText = `${character.shockDuration} turns`;
-    document.getElementById("character-burning-status").innerText = character.burningStatus ? "Yes" : "No";
-    document.getElementById("character-burning-duration").innerText = `${character.burningDuration} turns`;
-    document.getElementById("character-freezing-status").innerText = character.freezingStatus ? "Yes" : "No";
-    document.getElementById("character-freezing-duration").innerText = `${character.freezingDuration} turns`;
-    document.getElementById("character-bleeding-status").innerText = character.bleedingStatus ? "Yes" : "No";
-    document.getElementById("character-bleeding-duration").innerText = `${character.bleedingDuration} turns`;
-    document.getElementById("character-vapors-status").innerText = character.vaporsStatus ? "Yes" : "No";
-    document.getElementById("character-vapors-duration").innerText = `${character.vaporsDuration} turns`;
-    document.getElementById("character-poison-status").innerText = character.poisonStatus ? "Yes" : "No";
-    document.getElementById("character-poison-duration").innerText = `${character.poisonDuration} turns`;
-    document.getElementById("character-unconscious-status").innerText = character.unconsciousStatus ? "Yes" : "No";
-    document.getElementById("character-unconscious-duration").innerText = `${character.unconsciousDuration} turns`;
+    document.getElementById("character-dead-status").innerText = Game.character.deadStatus ? "Yes" : "No";
+    document.getElementById("character-blind-status").innerText = Game.character.blindStatus ? "Yes" : "No";
+    document.getElementById("character-blind-duration").innerText = `${Game.character.blindDuration} turns`;
+    document.getElementById("character-paralyze-status").innerText = Game.character.paralyzeStatus ? "Yes" : "No";
+    document.getElementById("character-paralyze-duration").innerText = `${Game.character.paralyzeDuration} turns`;
+    document.getElementById("character-stun-status").innerText = Game.character.stunStatus ? "Yes" : "No";
+    document.getElementById("character-stun-duration").innerText = `${Game.character.stunDuration} turns`;
+    document.getElementById("character-shock-status").innerText = Game.character.shockStatus ? "Yes" : "No";
+    document.getElementById("character-shock-duration").innerText = `${Game.character.shockDuration} turns`;
+    document.getElementById("character-burning-status").innerText = Game.character.burningStatus ? "Yes" : "No";
+    document.getElementById("character-burning-duration").innerText = `${Game.character.burningDuration} turns`;
+    document.getElementById("character-freezing-status").innerText = Game.character.freezingStatus ? "Yes" : "No";
+    document.getElementById("character-freezing-duration").innerText = `${Game.character.freezingDuration} turns`;
+    document.getElementById("character-bleeding-status").innerText = Game.character.bleedingStatus ? "Yes" : "No";
+    document.getElementById("character-bleeding-duration").innerText = `${Game.character.bleedingDuration} turns`;
+    document.getElementById("character-vapors-status").innerText = Game.character.vaporsStatus ? "Yes" : "No";
+    document.getElementById("character-vapors-duration").innerText = `${Game.character.vaporsDuration} turns`;
+    document.getElementById("character-poison-status").innerText = Game.character.poisonStatus ? "Yes" : "No";
+    document.getElementById("character-poison-duration").innerText = `${Game.character.poisonDuration} turns`;
+    document.getElementById("character-unconscious-status").innerText = Game.character.unconsciousStatus ? "Yes" : "No";
+    document.getElementById("character-unconscious-duration").innerText = `${Game.character.unconsciousDuration} turns`;
 	
 }
 
@@ -723,17 +723,17 @@ function showRoomDetails(zoneIndex) {
 
             // Update character attributes
             if (action.alcoholPercentage) {
-                character.alcoholPercentage = Math.min(100, character.alcoholPercentage + action.alcoholPercentage);
-                const alcoholStatus = getAlcoholStatus(character.alcoholPercentage);
+                Game.character.alcoholPercentage = Math.min(100, Game.character.alcoholPercentage + action.alcoholPercentage);
+                const alcoholStatus = getAlcoholStatus(Game.character.alcoholPercentage);
                 if (alcoholStatus) {
                     effectsList.push(alcoholStatus.effects);
-                    character.activeEffects.alcohol = alcoholStatus.name;  // Store the name
+                    Game.character.activeEffects.alcohol = alcoholStatus.name;  // Store the name
                 }
             }
 
             if (action.arousalPercentage) {
-                character.arousalPercentage = Math.min(100, character.arousalPercentage + action.arousalPercentage);
-                const arousalStatus = getArousalStatus(character.arousalPercentage);
+                Game.character.arousalPercentage = Math.min(100, Game.character.arousalPercentage + action.arousalPercentage);
+                const arousalStatus = getArousalStatus(Game.character.arousalPercentage);
                 if (arousalStatus) effectsList.push(arousalStatus.effects);
             }
 			
