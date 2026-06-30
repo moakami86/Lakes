@@ -1,3 +1,5 @@
+// Enemies data. Uses Game.character for combat interactions
+
 ///////////////////// Static Enemies List /////////////////////
 // Static enemy definition
 // Array to hold multiple enemies
