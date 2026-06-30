@@ -492,12 +492,12 @@ function clearMPresults() {
 
 // On page load, check if character is already created
 window.addEventListener('DOMContentLoaded', (event) => {
-    const savedData = JSON.parse(localStorage.getItem(`saveSlot${selectedSlot ? selectedSlot.id : ''}`)); // Adjust based on your slot management
+    const savedData = JSON.parse(localStorage.getItem(`saveSlot${selectedSlot ? selectedSlot.id : ''}`));
     const actionPrompt = document.getElementById('action-prompt');
 
-    if (savedData && savedData.Game.character.characterCreated) {
-        actionPrompt.style.display = 'none'; // Hide if character is created
+    if (savedData && savedData.characterCreated) {   // Changed here
+        actionPrompt.style.display = 'none';
     } else {
-        actionPrompt.style.display = 'block'; // Show if character is not created
+        actionPrompt.style.display = 'block';
     }
 });
