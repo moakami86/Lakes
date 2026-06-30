@@ -1,3 +1,5 @@
+// Character creation logic.
+// Uses Game.character
 
 // Function to calculate ability modifier based on ability score
 function calculateModifier(score) {
@@ -5,8 +7,8 @@ function calculateModifier(score) {
 }
 
 function updateCharacterAbilities() {
-    for (let ability in character.abilities) {
-        character.abilities[ability].modifier = calculateModifier(character.abilities[ability].score);
+    for (let ability in Game.character.abilities) {
+        Game.character.abilities[ability].modifier = calculateModifier(Game.character.abilities[ability].score);
     }
 }
 
@@ -185,7 +187,7 @@ function confirmAssignments() {
         // Check if the score can be used again
         if (usedScores[selectedScore] < rolledScores.filter(score => score === selectedScore).length) {
             // Assign the score to the character's ability
-            character.abilities[abilities[i]].score = selectedScore;
+            Game.character.abilities[abilities[i]].score = selectedScore;
             usedScores[selectedScore]++;
         } else {
             showStyledAlert(`The score ${selectedScore} has already been used the maximum times. Please select a different score for ${abilities[i]}.`);
@@ -296,17 +298,17 @@ function clearHPRollPrompt() {
 }
 
 function rollForHP() {
-    if (character.hpRolled) {
+    if (Game.character.hpRolled) {
         alert("You can only roll for HP once at the beginning of the game.");
         return;
     }
 
     const hpRoll = Math.floor(Math.random() * 12) + 1;
-    const constitutionModifier = character.abilities.constitution.modifier;
+    const constitutionModifier = Game.character.abilities.constitution.modifier;
 
-    character.maxHp += hpRoll + constitutionModifier;
-    character.currentHp = character.maxHp;
-    character.hpRolled = true;
+    Game.character.maxHp += hpRoll + constitutionModifier;
+    Game.character.currentHp = Game.character.maxHp;
+    Game.character.hpRolled = true;
 
     // Update character details after the HP roll
     updateCharacterDetails();  
@@ -332,11 +334,11 @@ function rollForHP() {
         hpResultContainer.appendChild(modifierText);
 
         const maxHpText = document.createElement("p");
-        maxHpText.innerHTML = `Max HP: <strong>${character.maxHp}</strong>`;
+        maxHpText.innerHTML = `Max HP: <strong>${Game.character.maxHp}</strong>`;
         hpResultContainer.appendChild(maxHpText);
 
         const currentHpText = document.createElement("p");
-        currentHpText.innerHTML = `Current HP: <strong>${character.currentHp}</strong>`;
+        currentHpText.innerHTML = `Current HP: <strong>${Game.character.currentHp}</strong>`;
         hpResultContainer.appendChild(currentHpText);
 
         // Add "Next" button that clears previous results and proceeds to MP roll
@@ -398,18 +400,18 @@ function clearMPRoll() {
 
 function rollForMP() {
     // Ensure the MP roll is only done once
-    if (character.mpRolled) {
+    if (Game.character.mpRolled) {
         alert("You can only roll for MP once at the beginning of the game.");
         return; // Prevent further execution
     }
 
     const mpRoll = Math.floor(Math.random() * 4) + 1; // Roll a 1d4
-    const intelligenceModifier = character.abilities.intelligence.modifier; // Get the Intelligence modifier
+    const intelligenceModifier = Game.character.abilities.intelligence.modifier; // Get the Intelligence modifier
 
     // Add the rolled MP to the existing max MP and current MP
-    character.maxMp += mpRoll + intelligenceModifier; // Set the max MP, including the modifier
-    character.currentMp = character.maxMp; // Set current MP to max MP at level 1
-    character.mpRolled = true; // Set the flag to indicate MP has been rolled
+    Game.character.maxMp += mpRoll + intelligenceModifier; // Set the max MP, including the modifier
+    Game.character.currentMp = Game.character.maxMp; // Set current MP to max MP at level 1
+    Game.character.mpRolled = true; // Set the flag to indicate MP has been rolled
 
     // Update character details on the screen
     updateCharacterDetails(); // Ensure UI reflects changes
@@ -435,11 +437,11 @@ function rollForMP() {
         mpResultContainer.appendChild(modifierText);
 
         const maxMpText = document.createElement("p");
-        maxMpText.innerHTML = `Your Maximum MP is now: <strong>${character.maxMp}</strong>`;
+        maxMpText.innerHTML = `Your Maximum MP is now: <strong>${Game.character.maxMp}</strong>`;
         mpResultContainer.appendChild(maxMpText);
 
         const currentMpText = document.createElement("p");
-        currentMpText.innerHTML = `Your Current MP is now: <strong>${character.currentMp}</strong>`;
+        currentMpText.innerHTML = `Your Current MP is now: <strong>${Game.character.currentMp}</strong>`;
         mpResultContainer.appendChild(currentMpText);
 
         // Add "Next" button
@@ -450,9 +452,9 @@ function rollForMP() {
 		console.log("Next button clicked. Clearing MP results.");
           clearMPresults(); // Clear the results displayed
 
-if (!character.setupFinished) {
+if (!Game.character.setupFinished) {
 	console.log("Setup is not finished. Marking setup as finished and navigating to the zone.");
-    character.setupFinished = true; // Mark setup as finished
+    Game.character.setupFinished = true; // Mark setup as finished
     // Now navigate to the zone "Miene's Bedroom"
     const targetZoneIndex = getZoneIndexByName("Miene's Bedroom");
 
@@ -493,7 +495,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     const savedData = JSON.parse(localStorage.getItem(`saveSlot${selectedSlot ? selectedSlot.id : ''}`)); // Adjust based on your slot management
     const actionPrompt = document.getElementById('action-prompt');
 
-    if (savedData && savedData.character.characterCreated) {
+    if (savedData && savedData.Game.character.characterCreated) {
         actionPrompt.style.display = 'none'; // Hide if character is created
     } else {
         actionPrompt.style.display = 'block'; // Show if character is not created
