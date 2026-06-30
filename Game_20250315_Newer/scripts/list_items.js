@@ -1,3 +1,6 @@
+// Master list of all items in the game.
+// Attached to Game.items during initialization.
+
 const items = [
     // Potions
     {
