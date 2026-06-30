@@ -1,3 +1,5 @@
+// Resize logic for status panel.
+
 document.addEventListener('DOMContentLoaded', (event) => {
     const rollPanel = document.querySelector('#statusPanel'); // Updated selector to match your ID
     const rollTitle = document.querySelector('.status-title');
