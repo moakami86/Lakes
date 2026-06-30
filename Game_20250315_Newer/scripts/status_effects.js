@@ -1,3 +1,5 @@
+// Status effects system. Uses Game.character for state.
+
 const statusEffects = {
     // Health-related states
     healthy: {
@@ -266,34 +268,20 @@ const statusEffects = {
 
 
 function getAlcoholStatus(alcoholPercentage) {
-    if (alcoholPercentage === 0) {
-        return null;
-    } else if (alcoholPercentage <= 20) {
-        return statusEffects.drunk.lightlyDrunk;
-    } else if (alcoholPercentage <= 40) {
-        return statusEffects.drunk.mediumDrunk;
-    } else if (alcoholPercentage <= 60) {
-        return statusEffects.drunk.veryDrunk;
-    } else {
-        return statusEffects.drunk.extremeDrunk;
-    }
+    if (alcoholPercentage === 0) return null;
+    else if (alcoholPercentage <= 20) return statusEffects.drunk.lightlyDrunk;
+    else if (alcoholPercentage <= 40) return statusEffects.drunk.mediumDrunk;
+    else if (alcoholPercentage <= 60) return statusEffects.drunk.veryDrunk;
+    else return statusEffects.drunk.extremeDrunk;
 }
 
-
 function getArousalStatus(arousalPercentage) {
-    if (arousalPercentage === 0) {
-        return null;
-    } else if (arousalPercentage <= 20) {
-        return statusEffects.arousal.mildlyAroused;
-    } else if (arousalPercentage <= 40) {
-        return statusEffects.arousal.moderatelyAroused;
-    } else if (arousalPercentage <= 60) { 
-        return statusEffects.arousal.highlyAroused;
-    } else if (arousalPercentage <= 80) { 
-        return statusEffects.arousal.extremelyAroused;
-    } else {
-        return statusEffects.arousal.uncontrollablyAroused;
-    }
+    if (arousalPercentage === 0) return null;
+    else if (arousalPercentage <= 20) return statusEffects.arousal.mildlyAroused;
+    else if (arousalPercentage <= 40) return statusEffects.arousal.moderatelyAroused;
+    else if (arousalPercentage <= 60) return statusEffects.arousal.highlyAroused;
+    else if (arousalPercentage <= 80) return statusEffects.arousal.extremelyAroused;
+    else return statusEffects.arousal.uncontrollablyAroused;
 }
 
 
@@ -349,10 +337,8 @@ function getThirstStatus(thirstPercentage) {
 
 
 function applyCombinedStatusEffects(effectsList) {
-    // Reset modifiers
+    if (!Game.character) return;
     resetCharacterModifiers();
-
-    // Combine all effects into one
     const combinedEffects = {};
     effectsList.forEach(effects => {
         for (const key in effects) {
@@ -361,81 +347,48 @@ function applyCombinedStatusEffects(effectsList) {
             }
         }
     });
-
-    // Apply combined effects
     for (const key in combinedEffects) {
         if (Game.character.abilities[key]) {
             Game.character.abilities[key].score += combinedEffects[key];
             Game.character.abilities[key].modifier = Math.floor((Game.character.abilities[key].score - 10) / 2);
         }
     }
-
-    // Store the applied effects for rollback
     Game.character.activeEffects = combinedEffects;
     updateStatusPanel();
 }
 
-
-// Reset the character's modifiers to their base values (healthy state)
 function resetCharacterModifiers() {
+    if (!Game.character) return;
     for (const ability in Game.character.abilities) {
         if (Game.character.abilities.hasOwnProperty(ability)) {
-            // Calculate base score and modifier again to reset everything correctly
             Game.character.abilities[ability].modifier = Math.floor((Game.character.abilities[ability].score - 10) / 2);
         }
     }
 }
 
-
-// Function to roll back the status effect changes (if needed)
-function rollbackStatusEffect(effects) {
-    for (const key in effects) {
-        if (effects.hasOwnProperty(key) && Game.character.abilities[key]) {
-            // Roll back the score change by subtracting the effect value
-            Game.character.abilities[key].score -= effects[key];
-
-            // Recalculate modifier after rolling back the score
-            Game.character.abilities[key].modifier = Math.floor((Game.character.abilities[key].score - 10) / 2);
-        }
-    }
-}
-
-
-
-
-
-
 function updateStatusPanel() {
+    if (!Game.character) return;
     const currentEffects = Game.character.activeEffects;
     const statusContainer = document.getElementById("statusPanel");
     const effectsContainer = document.getElementById("activeEffectsContainer");
     const statusDescription = document.getElementById("status-description");
-
     const tooltip = document.getElementById("tooltip");
     const tooltipDescription = document.getElementById("tooltip-description");
     const tooltipEffects = document.getElementById("tooltip-effects");
-
-// console.log("Current effects:", currentEffects);   //
 
     // Initially hide the description and effects
     statusDescription.style.display = "none";
 
     if (currentEffects && Object.keys(currentEffects).length > 0) {
-        // Get the status directly based on the alcohol percentage
         const currentStatus = getAlcoholStatus(Game.character.alcoholPercentage);
-
         if (currentStatus) {
             const statusName = document.getElementById("status-name");
-
             statusName.textContent = currentStatus.name || "No Status";
             statusDescription.textContent = currentStatus.description || "No Description";
+            effectsContainer.innerHTML = "";
 
-            effectsContainer.innerHTML = ""; // Clear existing effects
-
-            // Create the tooltip content
             tooltipDescription.innerHTML = `<strong>Description:</strong> ${currentStatus.description || "No Description"}<br><br>`;
 
-            // Loop through the active effects and create a list of effects for the tooltip
             let effectsContent = "<strong>Effects:</strong>";
             for (const key in currentEffects) {
                 if (currentEffects.hasOwnProperty(key)) {
@@ -443,19 +396,14 @@ function updateStatusPanel() {
                     effectsContent += `<p><strong>${key}</strong>: ${effectValue > 0 ? "+" + effectValue : effectValue}</p>`;
                 }
             }
-
             tooltipEffects.innerHTML = effectsContent;
 
-            // Add hover event to the status name element
             statusName.onmouseover = function(event) {
-                // Position the tooltip near the status name
                 tooltip.style.display = "block";
-                tooltip.style.left = event.pageX + 10 + "px";  // Position to the right
-                tooltip.style.top = event.pageY + 10 + "px";   // Position below the cursor
+                tooltip.style.left = event.pageX + 10 + "px";
+                tooltip.style.top = event.pageY + 10 + "px";
             };
-
             statusName.onmouseout = function() {
-                // Hide the tooltip when mouse leaves
                 tooltip.style.display = "none";
             };
         }
@@ -463,11 +411,9 @@ function updateStatusPanel() {
         const statusName = document.getElementById("status-name");
         statusName.textContent = "Healthy";
         statusDescription.textContent = "Miene feels.";
-
-        effectsContainer.innerHTML = ""; // Clear any effects
+        effectsContainer.innerHTML = "";
     }
 }
-
 
 
 
